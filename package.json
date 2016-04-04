@@ -1,0 +1,45 @@
+{
+  "name": "trailpack-mongoose",
+  "version": "0.1.0",
+  "description": "Mongoose Trailpack",
+  "homepage": "https://github.com/trailsjs/trailpack-mongoose",
+  "author": {
+    "name": "trailsjs",
+    "email": "hello@trailsjs.io",
+    "url": "trailsjs.io"
+  },
+  "main": "index.js",
+  "keywords": [
+    "trailpack",
+    "trails",
+    "trailjs"
+  ],
+  "dependencies": {
+    "lodash": "^4.0.0",
+    "mongoose": "^4.4.11",
+    "trailpack": "^1.0.0-alpha-7",
+    "trailpack-datastore": "^1.0.0",
+    "trails-service": "^1.0.0-alpha-1"
+  },
+  "devDependencies": {
+    "eslint": "^2.6.0",
+    "eslint-config-trails": "^1.0.1",
+    "mocha": "^2.4",
+    "smokesignals": "^1.0.2",
+    "sqlite3": "^3.1.1",
+    "trailpack-core": "^1.0.0-alpha-3",
+    "trails": "^1.0.0-alpha-1",
+    "trails-model": "^1.0.0-alpha-1"
+  },
+  "scripts": {
+    "test": "eslint . && mocha"
+  },
+  "engines": {
+    "node": ">= 4.0.0"
+  },
+  "eslintConfig": {
+    "extends": "trails"
+  },
+  "repository": "git@github.com:trailsjs/trailpack-mongoose.git",
+  "license": "MIT"
+}
