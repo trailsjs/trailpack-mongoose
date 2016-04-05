@@ -2,17 +2,20 @@
   "name": "trailpack-mongoose",
   "version": "0.1.0",
   "description": "Mongoose Trailpack",
-  "homepage": "https://github.com/trailsjs/trailpack-mongoose",
-  "author": {
-    "name": "trailsjs",
-    "email": "hello@trailsjs.io",
-    "url": "trailsjs.io"
-  },
   "main": "index.js",
+
   "keywords": [
     "trailpack",
     "trails",
     "trailjs"
+  ],
+  "homepage": "https://github.com/trailsjs/trailpack-mongoose",
+  "author": "Trails.js Team <hello@trailsjs.io>",
+  "contributors": [
+    {
+      "name": "Konstantin Zolotarev",
+      "url": "http://github.com/konstantinzolotarev"
+    }
   ],
   "dependencies": {
     "lodash": "^4.0.0",
@@ -41,5 +44,9 @@
     "extends": "trails"
   },
   "repository": "git@github.com:trailsjs/trailpack-mongoose.git",
-  "license": "MIT"
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/trailsjs/trailpack-mongoose/issues"
+  },
+  "homepage": "https://github.com/trailsjs/trailpack-mongoose#readme"
 }

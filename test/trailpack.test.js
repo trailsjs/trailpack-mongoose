@@ -7,9 +7,6 @@ describe('Mongoose Trailpack', () => {
   before(() => {
     pack = global.app.packs.mongoose
   })
-  describe('#validate', () => {
-    it.skip('TODO test')
-  })
 
   describe('#configure', () => {
     it('should load collections', () => {
