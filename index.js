@@ -34,7 +34,7 @@ module.exports = class MongooseTrailpack extends DatastoreTrailpack {
 
     this.models = lib.Transformer.transformModels(this.app)
 
-    this.app.orm = this.app.orm || {};
+    this.orm = this.orm || {};
     this.connections = _.mapValues(this.app.config.database.stores, (store, storeName) => {
       if (!_.isString(store.uri))
         throw new Error('Store have to contain "uri" option')
@@ -54,11 +54,13 @@ module.exports = class MongooseTrailpack extends DatastoreTrailpack {
           model.onSchema(schema)
 
           //create model
-          this.app.orm[model.globalId] = connection.model(model.globalId, schema, model.tableName)
+          this.orm[model.globalId] = connection.model(model.globalId, schema, model.tableName)
       })
 
       return connection
     })
+
+    this.app.orm = this.orm
   }
 
   /**

@@ -7,6 +7,7 @@ module.exports = class Role extends Model {
   static schema () {
 
     return {
+      name: String,
       user: {
         type: Schema.ObjectId,
         ref: 'UserSchema'
