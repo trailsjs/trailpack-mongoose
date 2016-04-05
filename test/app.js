@@ -2,7 +2,8 @@
 
 const _ = require('lodash')
 const smokesignals = require('smokesignals')
-const Model = require('trails-model')
+const User = require('./model/User')
+const Role = require('./model/Role')
 
 module.exports = _.defaultsDeep({
   pkg: {
@@ -10,15 +11,8 @@ module.exports = _.defaultsDeep({
   },
   api: {
     models: {
-      User: class User extends Model {
-        static schema (schema) {
-          return {
-            title: String,
-            num: Number,
-            active: Boolean
-          }
-        }
-      }
+      User: User,
+      Role: Role
     }
   },
   config: {
@@ -35,6 +29,12 @@ module.exports = _.defaultsDeep({
       stores: {
         teststore: {
           uri: 'mongodb://localhost:27017/test',
+          options: {
+
+          }
+        },
+        storeoverride: {
+          uri: 'mongodb://localhost:27017/test2',
           options: {
 
           }

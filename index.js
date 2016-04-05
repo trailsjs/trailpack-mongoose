@@ -3,6 +3,7 @@
 const _ = require('lodash')
 const mongoose = require('mongoose')
 const DatastoreTrailpack = require('trailpack-datastore')
+const lib = require('./lib')
 
 /**
  * Mongoose integration for Trails. Allows mongoose to read its configration from the
@@ -21,6 +22,8 @@ module.exports = class MongooseTrailpack extends DatastoreTrailpack {
 
   configure () {
     this.app.config.database.orm = 'mongoose'
+
+    this.mongoose = mongoose;
   }
 
   /**
@@ -29,7 +32,10 @@ module.exports = class MongooseTrailpack extends DatastoreTrailpack {
   initialize () {
     super.initialize()
 
-    this.stores = _.mapValues(this.app.config.database.stores, (store, storeName) => {
+    this.models = lib.Transformer.transformModels(this.app)
+
+    this.app.orm = this.app.orm || {};
+    this.connections = _.mapValues(this.app.config.database.stores, (store, storeName) => {
       if (!_.isString(store.uri))
         throw new Error('Store have to contain "uri" option')
 
@@ -40,14 +46,19 @@ module.exports = class MongooseTrailpack extends DatastoreTrailpack {
       if (!store.options.promiseLibrary)
         store.promiseLibrary = global.Promise;
 
-      return {
-        mongoose: mongoose.connect(store.uri, store.options),
-        models: _.pickBy(this.app.models, { store: storeName })
-      }
-    })
-    this.defaultStore = this.stores[this.app.config.database.models.defaultStore]
+      const connection = mongoose.createConnection(store.uri, store.options)
+      const models = _.pickBy(this.models, { connection: storeName })
 
-    return this.migrate()
+      _.map(models, model => {
+          const schema = new mongoose.Schema(model.schema, model.schemaOptions)
+          model.onSchema(schema)
+
+          //create model
+          this.app.orm[model.globalId] = connection.model(model.globalId, schema, model.tableName)
+      })
+
+      return connection
+    })
   }
 
   /**
@@ -55,7 +66,16 @@ module.exports = class MongooseTrailpack extends DatastoreTrailpack {
    */
   unload () {
     return Promise.all(
-      _.map(this.stores, store => store.mongoose.disconnect())
+      _.map(this.connections, connection => {
+        return new Promise((resolve, reject) => {
+          connection.close((err) => {
+            if (err)
+              return reject(err)
+
+            resolve()
+          })
+        })
+      })
     )
   }
 
@@ -65,27 +85,5 @@ module.exports = class MongooseTrailpack extends DatastoreTrailpack {
       api: require('./api'),
       pkg: require('./package')
     })
-  }
-
-  /**
-   * Migrate schema according to the database configuration
-   */
-  migrate () {
-    const SchemaMigrationService = this.app.services.SchemaMigrationService
-    const database = this.app.config.database
-
-    if (database.models.migrate == 'none') return
-
-    return Promise.all(
-      _.map(this.stores, store => {
-        if (database.models.migrate == 'drop') {
-          return SchemaMigrationService.drop(store.knex, this.app.models)
-        }
-      }))
-      .then(() => {
-        return Promise.all(_.map(this.stores, store => {
-          return SchemaMigrationService.create(store.knex, this.app.models)
-        }))
-      })
   }
 }

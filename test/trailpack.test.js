@@ -3,13 +3,26 @@
 const assert = require('assert')
 
 describe('Mongoose Trailpack', () => {
-  describe('#initialize', () => {
-    it('should group stores and models', () => {
-      const stores = global.app.packs.mongoose.stores
-      assert(stores.teststore)
-      assert(stores.teststore.models)
-      assert.equal(stores.teststore.models.user)
-      assert.equal(stores.teststore.models.user)
+  let pack
+  before(() => {
+    pack = global.app.packs.mongoose
+  })
+  describe('#validate', () => {
+    it.skip('TODO test')
+  })
+
+  describe('#configure', () => {
+    it('should load collections', () => {
+      assert(pack.mongoose)
+    })
+    it('should load and transform models', () => {
+      assert(pack.models)
+      assert(pack.models.User)
+      assert(pack.models.Role)
+    })
+    it('should load and transform connections', () => {
+      assert(pack.connections)
+      assert(pack.connections.teststore)
     })
   })
 })
