@@ -21,9 +21,7 @@ module.exports = class FootprintService extends Service {
   create (modelName, values, options) {
     const Model = this.app.orm[modelName] || this.app.packs.mongoose.orm[modelName]
 
-    return new Promise((resolve, reject) => {
-      Model.create(values).then(resolve).catch(reject)
-    })
+    return Model.create(values)
   }
 
   /**
@@ -52,9 +50,7 @@ module.exports = class FootprintService extends Service {
       }
     }
 
-    return new Promise((resolve, reject) => {
-      query.exec().then(resolve).catch(reject)
-    })
+    return query.exec()
   }
 
   /**
@@ -91,9 +87,7 @@ module.exports = class FootprintService extends Service {
         .then(() => Model.findOne({ _id: criteria }).exec())
     }
 
-    return new Promise((resolve, reject) => {
-      query.then(resolve).catch(reject)
-    })
+    return query
   }
 
   /*
@@ -124,9 +118,7 @@ module.exports = class FootprintService extends Service {
         .then(() => records)
     }
 
-    return new Promise((resolve, reject) => {
-      query.then(resolve).catch(reject)
-    })
+    return query
   }
 
 }
