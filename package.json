@@ -3,11 +3,14 @@
   "version": "0.1.0",
   "description": "Mongoose Trailpack",
   "main": "index.js",
-
   "keywords": [
     "trailpack",
     "trails",
-    "trailjs"
+    "trailsjs",
+    "mongoose",
+    "mongo",
+    "mongodb",
+    "orm"
   ],
   "homepage": "https://github.com/trailsjs/trailpack-mongoose",
   "author": "Trails.js Team <hello@trailsjs.io>",
