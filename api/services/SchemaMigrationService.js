@@ -1,5 +1,6 @@
 'use strict'
 
+const _ = require('lodash')
 const Service = require('trails-service')
 
 /**
@@ -9,27 +10,25 @@ const Service = require('trails-service')
 module.exports = class SchemaMigrationService extends Service {
 
   /**
-   * @param mongoose connection object
+   * @param connection connection object
    *
-   * Drop schema for a store
+   * Drop collections in current connection
    */
-  drop (mongoose, models) {
-    return Promise.resolve()
-  }
-
-  /**
-   * @param mongoose connection object
-   *
-   * Create schema for models in a store
-   */
-  create (mongoose, models) {
-    return Promise.resolve()
+  drop (connection) {
+    return Promise.all(
+      _.map(connection.collections, collection => {
+        return new Promise((resolve, reject) => {
+          collection.drop((err) => {
+            resolve()
+          })
+        })
+      }))
   }
 
   /**
    * Alter an existing schema
    */
-  alter (mongoose, model) {
+  alter (connection) {
     throw new Error('trailpack-mongoose does not currently support migrate=alter')
   }
 }

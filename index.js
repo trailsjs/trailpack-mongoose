@@ -61,6 +61,8 @@ module.exports = class MongooseTrailpack extends DatastoreTrailpack {
     })
 
     this.app.orm = this.orm
+
+    return this.migrate()
   }
 
   /**
@@ -87,5 +89,19 @@ module.exports = class MongooseTrailpack extends DatastoreTrailpack {
       api: require('./api'),
       pkg: require('./package')
     })
+  }
+
+  migrate () {
+    const SchemaMigrationService = this.app.services.SchemaMigrationService
+    const database = this.app.config.database
+
+    if (database.models.migrate == 'none') return
+
+    return Promise.all(
+      _.map(this.connections, connection => {
+        if (database.models.migrate == 'drop') {
+          return SchemaMigrationService.drop(connection)
+        }
+      }))
   }
 }
