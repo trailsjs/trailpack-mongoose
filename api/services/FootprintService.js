@@ -46,13 +46,9 @@ module.exports = class FootprintService extends Service {
       query = Model.findOne({ _id: criteria })
     }
     else {
+      query = Model.find(criteria)
       if (modelOptions.defaultLimit) {
-        query = Model.find(_.defaults(criteria, {
-          limit: modelOptions.defaultLimit
-        }))
-      }
-      else {
-        query = Model.find(criteria)
+        query = query.limit(modelOptions.defaultLimit)
       }
     }
 
