@@ -117,7 +117,7 @@ module.exports = class User extends Model {
 
 ```js
 // api/services/UserService.js
-module.exports = {
+module.exports = class UserService extends Service {
   /**
    * Finds people with the given email.
    * @return Promise
