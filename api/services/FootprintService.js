@@ -121,4 +121,59 @@ module.exports = class FootprintService extends Service {
     return query
   }
 
+  /**
+   * Create a model, and associate it with its parent model.
+   *
+   * @param parentModelName The name of the model's parent
+   * @param childAttributeName The name of the model to create
+   * @param parentId The id (required) of the parent model
+   * @param values The model's values
+   * @return Promise
+   */
+  createAssociation (parentModelName, parentId, childAttributeName, values, options) {
+    return Promise.reject('trailpack-mongoose does not have createAssociation support yet. Sorry')
+  }
+
+  /**
+   * Find all models that satisfy the given criteria, and which is associated
+   * with the given Parent Model.
+   *
+   * @param parentModelName The name of the model's parent
+   * @param childAttributeName The name of the model to create
+   * @param parentId The id (required) of the parent model
+   * @param criteria The search criteria
+   * @return Promise
+   */
+  findAssociation (parentModelName, parentId, childAttributeName, criteria, options) {
+    return Promise.reject('trailpack-mongoose does not have findAssociation support yet. Sorry')
+  }
+
+  /**
+   * Update models by criteria, and which is associated with the given
+   * Parent Model.
+   *
+   * @param parentModelName The name of the model's parent
+   * @param parentId The id (required) of the parent model
+   * @param childAttributeName The name of the model to create
+   * @param criteria The search criteria
+   * @return Promise
+   */
+  updateAssociation (parentModelName, parentId, childAttributeName, criteria, values, options) {
+    return Promise.reject('trailpack-mongoose does not have updateAssociation support yet. Sorry')
+  }
+
+  /**
+   * Destroy models by criteria, and which is associated with the
+   * given Parent Model.
+   *
+   * @param parentModelName The name of the model's parent
+   * @param parentId The id (required) of the parent model
+   * @param childAttributeName The name of the model to create
+   * @param criteria The search criteria
+   * @return Promise
+   */
+  destroyAssociation (parentModelName, parentId, childAttributeName, criteria, options) {
+    return Promise.reject('trailpack-mongoose does not have destroyAssociation support yet. Sorry')
+  }
+
 }
