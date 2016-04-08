@@ -25,6 +25,43 @@ module.exports = {
 }
 ```
 
+### Configure stores
+
+```js
+module.exports = {
+
+  /**
+   * Define the database stores. A store is typically a single database.
+   *
+   * Use the SQLite3 by default for development purposes.
+   *
+   * Set production connection info in config/env/production.js
+   */
+  stores: {
+
+    /**
+     * Define a store called "local" which uses SQLite3 to persist data.
+     */
+    someteststore: {
+      //migration
+      migrate: 'create',
+      // Mongodb URI
+      uri: 'mongodb://localhost:27017/test',
+      // Mongoose connection options
+      options: {
+
+      }
+    }
+  },
+
+  models: {
+    defaultStore: 'someteststore',
+    migrate: 'alter'
+  }
+}
+
+```
+
 ### Models
 
 ```js
