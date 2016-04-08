@@ -56,7 +56,7 @@ module.exports = {
 
   models: {
     defaultStore: 'someteststore',
-    migrate: 'alter'
+    migrate: 'drop'
   }
 }
 
