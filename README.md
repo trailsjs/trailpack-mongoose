@@ -73,7 +73,7 @@ module.exports = class User extends Model {
       childs: [{
         type: Schema.ObjectId,
         ref: 'UserSchema'
-      }]
+      }],
       email: {
         type: String,
         type: String,
@@ -81,7 +81,7 @@ module.exports = class User extends Model {
         unique: true,
         lowercase: true,
         trim: true,
-        validate: function () {
+        validate: {
           validator: function (val) {
             return isEmail(val)
           },
@@ -147,8 +147,7 @@ module.exports = class User extends Model {
       next()
     })
   }
-}
-```
+}```
 
 ### Query
 
