@@ -35,7 +35,8 @@ module.exports = class MongooseTrailpack extends DatastoreTrailpack {
     this.models = lib.Transformer.transformModels(this.app)
 
     this.orm = this.orm || {}
-    this.connections = _.mapValues(this.app.config.database.stores, (store, storeName) => {
+    this.connections = _.mapValues(this.app.config.database.stores, (_store, storeName) => {
+      const store = _.merge({ }, _store)
       if (!_.isString(store.uri))
         throw new Error('Store have to contain "uri" option')
 
@@ -50,11 +51,11 @@ module.exports = class MongooseTrailpack extends DatastoreTrailpack {
       const models = _.pickBy(this.models, { connection: storeName })
 
       _.map(models, model => {
-          const schema = new mongoose.Schema(model.schema, model.schemaOptions)
-          model.onSchema(schema)
+        const schema = new mongoose.Schema(model.schema, model.schemaOptions)
+        model.onSchema(schema)
 
-          //create model
-          this.orm[model.globalId] = connection.model(model.globalId, schema, model.tableName)
+        //create model
+        this.orm[model.globalId] = connection.model(model.globalId, schema, model.tableName)
       })
 
       return connection

@@ -23,19 +23,18 @@
   "dependencies": {
     "lodash": "^4.0.0",
     "mongoose": "^4.4.11",
-    "trailpack": "^1.0.0-alpha-7",
+    "trailpack": "^1.0.2",
     "trailpack-datastore": "^1.0.0",
-    "trails-service": "^1.0.0-alpha-1"
+    "trails-service": "^1.0.0-beta-2"
   },
   "devDependencies": {
-    "eslint": "^2.6.0",
-    "eslint-config-trails": "^1.0.1",
+    "eslint": "^2.10.0",
+    "eslint-config-trails": "^1.0.6",
     "mocha": "^2.4",
-    "smokesignals": "^1.0.2",
-    "sqlite3": "^3.1.1",
-    "trailpack-core": "^1.0.0-alpha-3",
-    "trails": "^1.0.0-alpha-1",
-    "trails-model": "^1.0.0-alpha-1"
+    "smokesignals": "^1.2.2",
+    "trailpack-core": "^1.0.0-beta-6",
+    "trails": "^1.0.0",
+    "trails-model": "^1.0.0-beta-2"
   },
   "scripts": {
     "test": "eslint . && mocha"
