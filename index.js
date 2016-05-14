@@ -23,7 +23,7 @@ module.exports = class MongooseTrailpack extends DatastoreTrailpack {
   configure () {
     this.app.config.database.orm = 'mongoose'
 
-    this.mongoose = mongoose;
+    this.mongoose = mongoose
   }
 
   /**
@@ -34,7 +34,7 @@ module.exports = class MongooseTrailpack extends DatastoreTrailpack {
 
     this.models = lib.Transformer.transformModels(this.app)
 
-    this.orm = this.orm || {};
+    this.orm = this.orm || {}
     this.connections = _.mapValues(this.app.config.database.stores, (store, storeName) => {
       if (!_.isString(store.uri))
         throw new Error('Store have to contain "uri" option')
