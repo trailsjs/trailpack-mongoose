@@ -12,7 +12,7 @@ module.exports = class Role extends Model {
         type: Schema.ObjectId,
         ref: 'UserSchema'
       }
-    };
+    }
   }
 
   static config () {

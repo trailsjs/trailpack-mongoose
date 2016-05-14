@@ -40,11 +40,11 @@ module.exports = class MongooseTrailpack extends DatastoreTrailpack {
         throw new Error('Store have to contain "uri" option')
 
       if (!_.isObject(store.options))
-        store.options = {};
+        store.options = {}
 
       // Setup promise library for mongoose
       if (!store.options.promiseLibrary)
-        store.options.promiseLibrary = global.Promise;
+        store.options.promiseLibrary = global.Promise
 
       const connection = mongoose.createConnection(store.uri, store.options)
       const models = _.pickBy(this.models, { connection: storeName })

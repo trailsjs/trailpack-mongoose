@@ -67,7 +67,7 @@ module.exports = class FootprintService extends Service {
     const Model = this.app.orm[modelName] || this.app.packs.mongoose.orm[modelName]
     const modelOptions = _.defaultsDeep({ }, options, _.get(this.config, 'footprints.models.options'))
     let query
-    let ids;
+    let ids
     if (_.isPlainObject(criteria)) {
       query = Model.find(criteria).select('_id')
       if (modelOptions.defaultLimit) {

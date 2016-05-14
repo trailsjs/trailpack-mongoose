@@ -20,7 +20,7 @@ module.exports = class User extends Model {
         type: Boolean,
         default: false
       }
-    };
+    }
   }
 
   static config () {
@@ -38,7 +38,7 @@ module.exports = class User extends Model {
       },
       methods: {
         makeActive () {
-          this.active = true;
+          this.active = true
         }
       }
     }
