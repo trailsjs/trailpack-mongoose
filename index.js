@@ -59,7 +59,7 @@ module.exports = class MongooseTrailpack extends DatastoreTrailpack {
         model.onSchema(schema)
 
         //create model
-        this.orm[model.globalId] = connection.model(model.globalId, schema, model.tableName)
+        this.orm[model.identity] = connection.model(model.globalId, schema, model.tableName)
       })
 
       return connection
