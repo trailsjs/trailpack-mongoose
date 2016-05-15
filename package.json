@@ -1,6 +1,6 @@
 {
   "name": "trailpack-mongoose",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Mongoose Trailpack",
   "main": "index.js",
   "keywords": [
@@ -12,7 +12,7 @@
     "mongodb",
     "orm"
   ],
-  "homepage": "https://github.com/trailsjs/trailpack-mongoose",
+  "homepage": "https://github.com/trailsjs/trailpack-mongoose#readme",
   "author": "Trails.js Team <hello@trailsjs.io>",
   "contributors": [
     {
@@ -49,6 +49,5 @@
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/trailsjs/trailpack-mongoose/issues"
-  },
-  "homepage": "https://github.com/trailsjs/trailpack-mongoose#readme"
+  }
 }
