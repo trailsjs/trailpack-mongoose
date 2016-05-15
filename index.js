@@ -52,6 +52,10 @@ module.exports = class MongooseTrailpack extends DatastoreTrailpack {
 
       _.map(models, model => {
         const schema = new mongoose.Schema(model.schema, model.schemaOptions)
+        // Bind statics & methods
+        schema.statics = model.statics
+        schema.methods = model.methods
+
         model.onSchema(schema)
 
         //create model
