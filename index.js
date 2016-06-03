@@ -47,6 +47,9 @@ module.exports = class MongooseTrailpack extends DatastoreTrailpack {
       if (!store.options.promiseLibrary)
         store.options.promiseLibrary = global.Promise
 
+      // Binding promise library
+      mongoose.Promise = store.options.promiseLibrary
+
       const connection = mongoose.createConnection(store.uri, store.options)
       const models = _.pickBy(this.models, { connection: storeName })
 
