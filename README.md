@@ -39,6 +39,7 @@ module.exports = {
 ### Configure stores
 
 ```js
+// config/database.js
 module.exports = {
 
   /**
