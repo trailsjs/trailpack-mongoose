@@ -2,3 +2,5 @@
 *.sqlite
 node_modules
 coverage
+*.swp
+*.swo
