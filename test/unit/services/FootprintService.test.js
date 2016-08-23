@@ -69,4 +69,37 @@ describe('FootprintService', () => {
     })
   })
 
+  describe('#createAssociation', () => {
+
+    it('fail if wrong model', () => {
+      return FootprintService
+        .createAssociation('Something')
+        .then(() => Promise.reject())
+        .catch((err) => {
+          expect(err).to.be.an('error')
+            .and.to.have.property('message', 'No model found')
+        })
+    })
+
+    it('fail with no parentId', () => {
+      return FootprintService
+        .createAssociation('User')
+        .then(() => Promise.reject())
+        .catch((err) => {
+          expect(err).to.be.an('error')
+            .and.to.have.property('message', 'No parentId provided')
+        })
+    })
+
+    it('fail with no childAttributeName', () => {
+      return FootprintService
+        .createAssociation('User', 1)
+        .then(() => Promise.reject())
+        .catch((err) => {
+          expect(err).to.be.an('error')
+            .and.to.have.property('message', 'No child attribute name')
+        })
+    })
+  })
+
 })
