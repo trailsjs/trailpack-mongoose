@@ -4,10 +4,13 @@ const assert = require('assert')
 const _ = require('lodash')
 
 describe('api.services.FootprintService', () => {
+
   let FootprintService
+
   before(() => {
     FootprintService = global.app.services.FootprintService
   })
+
   describe('#create', () => {
     it('should insert a record', () => {
       return FootprintService.create('Role', { name: 'createtest' })
@@ -16,7 +19,9 @@ describe('api.services.FootprintService', () => {
         })
     })
   })
+
   describe('#find', () => {
+
     it('should find a single record', () => {
       return FootprintService.create('Role', { name: 'findtest' })
         .then(role => {
@@ -29,6 +34,7 @@ describe('api.services.FootprintService', () => {
           assert.equal(role.name, 'findtest')
         })
     })
+
     it('should find a set of records', () => {
       return FootprintService.create('Role', { name: 'findtest' })
         .then(role => {
@@ -42,8 +48,11 @@ describe('api.services.FootprintService', () => {
           assert.equal(roles[0].name, 'findtest')
         })
     })
+
   })
+
   describe('#update', () => {
+
     it('should update a set of records', () => {
       return FootprintService.create('Role', { name: 'updatetest' })
         .then(role => {
@@ -77,8 +86,11 @@ describe('api.services.FootprintService', () => {
           assert.equal(role.name, 'updated')
         })
     })
+
   })
+
   describe('#destroy', () => {
+
     it('should delete a set of records', () => {
       return FootprintService.create('Role', { name: 'destroytest' })
         .then(role => {
