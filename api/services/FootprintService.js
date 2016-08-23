@@ -11,15 +11,27 @@ const Service = require('trails-service')
 module.exports = class FootprintService extends Service {
 
   /**
+   * Internal method to retreive model object
+   * @param {String} modelName name of the model to retreive
+   * @returns {Object?}
+   * @private
+   */
+  _getModel (modelName) {
+    return this.app.orm[modelName] || this.app.packs.mongoose.orm[modelName]
+  }
+
+  /**
    * Create a model, or models. Multiple models will be created if "values" is
    * an array.
    *
-   * @param modelName The name of the model to create
-   * @param values The model's values
+   * @param {String} modelName The name of the model to create
+   * @param {Object} values The model's values
    * @return Promise
    */
   create (modelName, values, options) {
-    const Model = this.app.orm[modelName] || this.app.packs.mongoose.orm[modelName]
+    const Model = this._getModel(modelName)
+    if (!Model)
+      return Promise.reject(new Error('No model found'))
 
     return Model.create(values)
   }
@@ -33,9 +45,13 @@ module.exports = class FootprintService extends Service {
    * @return Promise
    */
   find (modelName, criteria, options) {
-    const Model = this.app.orm[modelName] || this.app.packs.mongoose.orm[modelName]
+    const Model = this._getModel(modelName)
     const modelOptions = _.defaultsDeep({ }, options,
       _.get(this.config, 'footprints.models.options'))
+
+    if (!Model)
+      return Promise.reject(new Error('No model found'))
+
     let query
 
     if (!options) {
@@ -65,9 +81,13 @@ module.exports = class FootprintService extends Service {
    * @return Promise
    */
   update (modelName, criteria, values, options) {
-    const Model = this.app.orm[modelName] || this.app.packs.mongoose.orm[modelName]
+    const Model = this._getModel(modelName)
     const modelOptions = _.defaultsDeep({ }, options,
       _.get(this.config, 'footprints.models.options'))
+
+    if (!Model)
+      return Promise.reject(new Error('No model found'))
+
     let query
     let ids
     if (_.isPlainObject(criteria)) {
@@ -100,7 +120,10 @@ module.exports = class FootprintService extends Service {
    * @return Promise
    */
   destroy (modelName, criteria, options) {
-    const Model = this.app.orm[modelName] || this.app.packs.mongoose.orm[modelName]
+    const Model = this._getModel(modelName)
+    if (!Model)
+      return Promise.reject(new Error('No model found'))
+
     let query
     let records
     if (_.isPlainObject(criteria)) {

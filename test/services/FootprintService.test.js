@@ -12,6 +12,7 @@ describe('api.services.FootprintService', () => {
   })
 
   describe('#create', () => {
+
     it('should insert a record', () => {
       return FootprintService.create('Role', { name: 'createtest' })
         .then(role => {
@@ -124,6 +125,22 @@ describe('api.services.FootprintService', () => {
           assert.equal(roles.length, 0)
         })
     })
+  })
+
+  describe('#createAssociation', () => {
+
+  })
+
+  describe('#findAssociation', () => {
+
+  })
+
+  describe('#updateAssociation', () => {
+
+  })
+
+  describe('#destroyAssociation', () => {
+
   })
 
 })
