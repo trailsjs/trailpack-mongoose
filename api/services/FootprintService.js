@@ -21,6 +21,40 @@ module.exports = class FootprintService extends Service {
   }
 
   /**
+   * Get field definition for given model
+   * @param {Mongoose.Model} model
+   * @param {String} field
+   * @returns {Object?} definition or null
+   * @private
+   */
+  _getReferenceDefinition (model, field) {
+    if (!_.isObject(model) || !_.has(model, 'schema.paths') || !_.isString(field))
+      return null
+
+    if (!model.schema.paths[field])
+      return null
+
+    return model.schema.paths[field]
+  }
+
+  /**
+   * Try to load model by given parent model and reference field.
+   * @param {Mongoose.Model} model
+   * @param {String} reference
+   * @returns {String} false if no reference exist or child Model name
+   * @private
+   */
+  _getReferenceModelName (model, reference) {
+    const ref = this._getReferenceDefinition(model, reference)
+    if (!ref)
+      return false
+    if (!_.has(ref, 'options.ref') || !_.isString(ref.options.ref))
+      return false
+
+    return ref.options.ref
+  }
+
+  /**
    * Create a model, or models. Multiple models will be created if "values" is
    * an array.
    *
@@ -156,7 +190,42 @@ module.exports = class FootprintService extends Service {
    * @return Promise
    */
   createAssociation (parentModelName, parentId, childAttributeName, values, options) {
-    return Promise.reject('trailpack-mongoose does not have createAssociation support yet. Sorry')
+    const Model = this._getModel(parentModelName)
+    if (!Model)
+      return Promise.reject(new Error('No model found'))
+
+    if (!parentId)
+      return Promise.reject(new Error('No parentId provided'))
+
+    const childModelName = this._getReferenceModelName(Model, childAttributeName)
+    if (!childModelName)
+      return Promise.reject(new Error('No such reference exist'))
+
+    const childDefinition = this._getReferenceDefinition(Model, childAttributeName)
+    options = options || {}
+    return Model
+      .findOne({ _id: parentId })
+      .then((record) => {
+        if (!record)
+          return Promise.reject(new Error('No parent record found'))
+
+        return this
+          .create(childModelName, values, options)
+          .then((child) => {
+            if (!child || !child._id) // eslint-disable-line
+              return Promise.reject(new Error('No _id for child record'))
+
+            if (childDefinition.instance === 'Array')
+              record[childAttributeName].push(child._id) // eslint-disable-line
+            else
+              record[childAttributeName] = child._id // eslint-disable-line
+
+
+            return record
+              .save()
+              .then(() => child)
+          })
+      })
   }
 
   /**

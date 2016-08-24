@@ -21,8 +21,13 @@ module.exports = class User extends Model {
         type: Boolean,
         default: false
       },
-      roles: {
+      role: {
         type: Schema.Types.ObjectId,
+        ref: 'Role'
+      },
+
+      roles: {
+        type: [Schema.Types.ObjectId],
         ref: 'Role'
       }
     }
@@ -59,6 +64,7 @@ module.exports = class User extends Model {
         return next()
       }
       this.password += '***' //stupid check
+      return next()
     })
   }
 }

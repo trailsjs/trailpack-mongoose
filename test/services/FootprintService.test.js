@@ -129,6 +129,56 @@ describe('api.services.FootprintService', () => {
 
   describe('#createAssociation', () => {
 
+    let user
+    let role
+
+    before(() => {
+      return FootprintService
+        .create('User', { email: 'test@test.com', password: '123' })
+        .then((record) => {
+          assert(record)
+          assert(record._id) // eslint-disable-line
+
+          user = record
+        })
+    })
+
+    it('should create an assotiation record', () => {
+      return FootprintService
+        .createAssociation('User', user._id, 'role', { name: 'test' }) // eslint-disable-line
+        .then((rec) => {
+          assert(rec)
+          assert(rec._id) // eslint-disable-line
+          assert.equal(rec.name, 'test')
+
+          role = rec
+          return FootprintService
+            .find('User', user._id) // eslint-disable-line
+        })
+        .then((rec) => {
+          assert(rec)
+          assert.equal(rec.id, user.id) // eslint-disable-line
+          assert.equal(rec.role, role.id)
+        })
+    })
+
+    it('should add record into array', () => {
+      return FootprintService
+        .createAssociation('User', user.id, 'roles', { name: 'temp' })
+        .then((rec) => {
+          assert(rec)
+          role = rec
+          return FootprintService
+            .find('User', user.id, { findOne: true })
+        })
+        .then((rec) => {
+          assert(rec)
+          assert.equal(rec.id, user.id)
+          assert(_.isArray(rec.roles))
+          assert.equal(rec.roles.length, 1)
+          assert.equal(rec.roles[0], role.id)
+        })
+    })
   })
 
   describe('#findAssociation', () => {

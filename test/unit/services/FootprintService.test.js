@@ -2,6 +2,7 @@
 'use strict'
 
 const expect = require('chai').expect
+const mongoose = require('mongoose')
 
 describe('FootprintService', () => {
 
@@ -69,6 +70,34 @@ describe('FootprintService', () => {
     })
   })
 
+  describe('#_getReferenceModelName', () => {
+
+    let User
+
+    before(() => {
+      User = global.app.orm.User
+    })
+
+    it('should exist', () => {
+      expect(FootprintService._getReferenceModelName).to.be.an('function') // eslint-disable-line
+    })
+
+    it('false if no model or reference', () => {
+      expect(FootprintService._getReferenceModelName({})).to.be.false // eslint-disable-line
+      expect(FootprintService._getReferenceModelName(User)).to.be.false // eslint-disable-line
+      expect(FootprintService._getReferenceModelName(User, [])).to.be.false // eslint-disable-line
+    })
+
+    it('false if no such reference in model', () => {
+      expect(FootprintService._getReferenceModelName(User, 'nonExisting')).to.be.false // eslint-disable-line
+    })
+
+    it('return model with correct reference', () => {
+      const role = FootprintService._getReferenceModelName(User, 'roles') // eslint-disable-line
+      expect(role).to.be.eq('Role')
+    })
+  })
+
   describe('#createAssociation', () => {
 
     it('fail if wrong model', () => {
@@ -91,15 +120,27 @@ describe('FootprintService', () => {
         })
     })
 
-    it('fail with no childAttributeName', () => {
+    it('fail if no reference exist', () => {
       return FootprintService
-        .createAssociation('User', 1)
+        .createAssociation('User', 1, 'nonExisting')
         .then(() => Promise.reject())
         .catch((err) => {
           expect(err).to.be.an('error')
-            .and.to.have.property('message', 'No child attribute name')
+            .and.to.have.property('message', 'No such reference exist')
         })
     })
+
+    it('fail if no parent record exist', () => {
+      const id = mongoose.Types.ObjectId() // eslint-disable-line
+      return FootprintService
+        .createAssociation('User', id, 'role')
+        .then(() => Promise.reject())
+        .catch((err) => {
+          expect(err).to.be.an('error')
+            .and.to.have.property('message', 'No parent record found')
+        })
+    })
+
   })
 
 })
