@@ -239,7 +239,40 @@ module.exports = class FootprintService extends Service {
    * @return Promise
    */
   findAssociation (parentModelName, parentId, childAttributeName, criteria, options) {
-    return Promise.reject('trailpack-mongoose does not have findAssociation support yet. Sorry')
+    const Model = this._getModel(parentModelName)
+    if (!Model)
+      return Promise.reject(new Error('No model found'))
+
+    if (!parentId)
+      return Promise.reject(new Error('No parentId provided'))
+
+    const childModelName = this._getReferenceModelName(Model, childAttributeName)
+    if (!childModelName)
+      return Promise.reject(new Error('No such reference exist'))
+
+    if (!this.app.orm[childModelName])
+      return Promise.reject(new Error('No such reference exist'))
+
+    options = options || {}
+    return this
+      .find('User', parentId, options)
+      .then((record) => {
+        if (!record)
+          return Promise.reject(new Error('No parent record found'))
+
+        // Saving time. no need to make query if reference is empty
+        if (!record[childAttributeName])
+          return Promise.resolve([])
+
+        let query
+        if (_.isArray(record[childAttributeName]))
+          query = { _id: { '$in': record[childAttributeName] } }
+        else
+          query = { _id: record[childAttributeName] }
+
+        return this
+          .find(childModelName, query)
+      })
   }
 
   /**

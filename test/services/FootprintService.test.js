@@ -183,6 +183,36 @@ describe('api.services.FootprintService', () => {
 
   describe('#findAssociation', () => {
 
+    let user
+    let role
+
+    before(() => {
+      return FootprintService
+        .create('User', { email: 'test1@test.com', password: '123' })
+        .then((record) => {
+          assert(record)
+          assert(record._id) // eslint-disable-line
+
+          user = record
+          return FootprintService
+            .createAssociation('User', user._id, 'role', { name: 'test' }) // eslint-disable-line
+            .then((rec) => {
+              assert(rec)
+              assert(rec._id) // eslint-disable-line
+              role = rec
+            })
+        })
+    })
+
+    it('should find assotiation', () => {
+      return FootprintService
+        .findAssociation('User', user._id, 'role') // eslint-disable-line
+        .then((list) => {
+          assert(_.isArray(list))
+          assert.equal(list.length, 1)
+          assert.equal(list[0]._id.toString(), role._id.toString()) // eslint-disable-line
+        })
+    })
   })
 
   describe('#updateAssociation', () => {
