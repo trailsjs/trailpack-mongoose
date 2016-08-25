@@ -270,8 +270,9 @@ module.exports = class FootprintService extends Service {
         else
           query = { _id: record[childAttributeName] }
 
+        criteria = criteria || {}
         return this
-          .find(childModelName, query)
+          .find(childModelName, _.extend(query, criteria))
       })
   }
 
@@ -300,7 +301,51 @@ module.exports = class FootprintService extends Service {
    * @return Promise
    */
   destroyAssociation (parentModelName, parentId, childAttributeName, criteria, options) {
-    return Promise.reject('trailpack-mongoose does not have destroyAssociation support yet. Sorry')
+    const Model = this._getModel(parentModelName)
+    if (!Model)
+      return Promise.reject(new Error('No model found'))
+
+    if (!parentId)
+      return Promise.reject(new Error('No parentId provided'))
+
+    const childModelName = this._getReferenceModelName(Model, childAttributeName)
+    if (!childModelName)
+      return Promise.reject(new Error('No such reference exist'))
+
+    options = options || {}
+    return this
+      .find(parentModelName, parentId, options)
+      .then((record) => {
+        if (!record)
+          return Promise.reject(new Error('No parent record found'))
+
+        if (_.isArray(record[childAttributeName])) {
+          return this
+            .find(childModelName, criteria, options)
+            .then((list) => {
+              if (!list)
+                return []
+
+              const ids = list.map(item => item._id) // eslint-disable-line
+              return this
+                .destroy(childModelName, { _id: { '$in': ids } })
+                .then(() => {
+                  record[childAttributeName] = _.difference(record[childAttributeName], ids)
+                  return record.save()
+                })
+                .then(() => ids.map(id => { _id: id })) // eslint-disable-line
+            })
+        }
+        else {
+          return this
+            .destroy(childModelName, record[childAttributeName], options)
+            .then(() => {
+              record[childAttributeName] = null
+              return record.save()
+            })
+            .then(() => { _id: record[childAttributeName] }) // eslint-disable-line
+        }
+      })
   }
 
 }

@@ -221,6 +221,41 @@ describe('api.services.FootprintService', () => {
 
   describe('#destroyAssociation', () => {
 
+    let user
+    let role
+
+    before(() => {
+      return FootprintService
+        .create('User', { email: 'test3@test.com', password: '123' })
+        .then((record) => {
+          assert(record)
+          assert(record._id) // eslint-disable-line
+
+          user = record
+          return FootprintService
+            .createAssociation('User', user._id, 'role', { name: 'test' }) // eslint-disable-line
+            .then((rec) => {
+              assert(rec)
+              assert(rec._id) // eslint-disable-line
+              role = rec
+            })
+        })
+    })
+
+    it('should remove record', () => {
+      return FootprintService
+        .destroyAssociation('User', user._id, 'role', { name: 'test' }) // eslint-disable-line
+        .then(() => FootprintService.find('Role', role._id, { findOne: true })) // eslint-disable-line
+        .then((rec) => {
+          assert(!rec)
+          return FootprintService
+            .find('User', user._id, { findOne: true }) // eslint-disable-line
+            .then((rec) => {
+              assert(rec)
+              assert(!rec.role)
+            })
+        })
+    })
   })
 
 })
