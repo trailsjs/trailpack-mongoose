@@ -191,4 +191,99 @@ describe('FootprintService', () => {
     })
   })
 
+  xdescribe('#updateAssociation', () => {
+
+    it('should exist', () => {
+      expect(FootprintService.updateAssociation).to.be.a('function')
+    })
+
+    it('fail if wrong parentModel', () => {
+      return FootprintService
+        .updateAssociation()
+        .then(() => Promise.reject())
+        .catch((err) => {
+          expect(err).to.be.an('error')
+            .and.to.have.property('message', 'No model found')
+        })
+    })
+
+    it('fail if no parentId provided', () => {
+      return FootprintService
+        .updateAssociation('User')
+        .then(() => Promise.reject())
+        .catch((err) => {
+          expect(err).to.be.an('error')
+            .and.to.have.property('message', 'No parentId provided')
+        })
+    })
+
+    it('fail if no parentModel exsit', () => {
+      return FootprintService
+        .updateAssociation('User', mongoose.Types.ObjectId(), 'role') // eslint-disable-line
+        .then(() => Promise.reject())
+        .catch((err) => {
+          expect(err).to.be.an('error')
+            .and.to.have.property('message', 'No parent record found')
+        })
+
+    })
+
+    it('fail if no reference exist', () => {
+      return FootprintService
+        .updateAssociation('User', 1, 'nonExisting')
+        .then(() => Promise.reject())
+        .catch((err) => {
+          expect(err).to.be.an('error')
+            .and.to.have.property('message', 'No such reference exist')
+        })
+    })
+  })
+
+  describe('#destroyAssociation', () => {
+
+    it('should exist', () => {
+      expect(FootprintService.destroyAssociation).to.be.a('function')
+    })
+
+    it('fail if wrong parentModel', () => {
+      return FootprintService
+        .destroyAssociation()
+        .then(() => Promise.reject())
+        .catch((err) => {
+          expect(err).to.be.an('error')
+            .and.to.have.property('message', 'No model found')
+        })
+    })
+
+    it('fail if no parentId provided', () => {
+      return FootprintService
+        .destroyAssociation('User')
+        .then(() => Promise.reject())
+        .catch((err) => {
+          expect(err).to.be.an('error')
+            .and.to.have.property('message', 'No parentId provided')
+        })
+    })
+
+    it('fail if no parentModel exsit', () => {
+      return FootprintService
+        .destroyAssociation('User', mongoose.Types.ObjectId(), 'role') // eslint-disable-line
+        .then(() => Promise.reject())
+        .catch((err) => {
+          expect(err).to.be.an('error')
+            .and.to.have.property('message', 'No parent record found')
+        })
+
+    })
+
+    it('fail if no reference exist', () => {
+      return FootprintService
+        .destroyAssociation('User', 1, 'nonExisting')
+        .then(() => Promise.reject())
+        .catch((err) => {
+          expect(err).to.be.an('error')
+            .and.to.have.property('message', 'No such reference exist')
+        })
+    })
+  })
 })
