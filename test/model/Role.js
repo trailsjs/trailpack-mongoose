@@ -9,8 +9,8 @@ module.exports = class Role extends Model {
     return {
       name: String,
       user: {
-        type: Schema.ObjectId,
-        ref: 'UserSchema'
+        type: Schema.Types.ObjectId,
+        ref: 'User'
       }
     }
   }

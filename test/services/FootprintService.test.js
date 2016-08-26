@@ -4,11 +4,15 @@ const assert = require('assert')
 const _ = require('lodash')
 
 describe('api.services.FootprintService', () => {
+
   let FootprintService
+
   before(() => {
     FootprintService = global.app.services.FootprintService
   })
+
   describe('#create', () => {
+
     it('should insert a record', () => {
       return FootprintService.create('Role', { name: 'createtest' })
         .then(role => {
@@ -16,7 +20,9 @@ describe('api.services.FootprintService', () => {
         })
     })
   })
+
   describe('#find', () => {
+
     it('should find a single record', () => {
       return FootprintService.create('Role', { name: 'findtest' })
         .then(role => {
@@ -29,6 +35,7 @@ describe('api.services.FootprintService', () => {
           assert.equal(role.name, 'findtest')
         })
     })
+
     it('should find a set of records', () => {
       return FootprintService.create('Role', { name: 'findtest' })
         .then(role => {
@@ -42,8 +49,11 @@ describe('api.services.FootprintService', () => {
           assert.equal(roles[0].name, 'findtest')
         })
     })
+
   })
+
   describe('#update', () => {
+
     it('should update a set of records', () => {
       return FootprintService.create('Role', { name: 'updatetest' })
         .then(role => {
@@ -77,8 +87,11 @@ describe('api.services.FootprintService', () => {
           assert.equal(role.name, 'updated')
         })
     })
+
   })
+
   describe('#destroy', () => {
+
     it('should delete a set of records', () => {
       return FootprintService.create('Role', { name: 'destroytest' })
         .then(role => {
@@ -110,6 +123,171 @@ describe('api.services.FootprintService', () => {
         })
         .then(roles => {
           assert.equal(roles.length, 0)
+        })
+    })
+  })
+
+  describe('#createAssociation', () => {
+
+    let user
+    let role
+
+    before(() => {
+      return FootprintService
+        .create('User', { email: 'test@test.com', password: '123' })
+        .then((record) => {
+          assert(record)
+          assert(record._id) // eslint-disable-line
+
+          user = record
+        })
+    })
+
+    it('should create an assotiation record', () => {
+      return FootprintService
+        .createAssociation('User', user._id, 'role', { name: 'test' }) // eslint-disable-line
+        .then((rec) => {
+          assert(rec)
+          assert(rec._id) // eslint-disable-line
+          assert.equal(rec.name, 'test')
+
+          role = rec
+          return FootprintService
+            .find('User', user._id) // eslint-disable-line
+        })
+        .then((rec) => {
+          assert(rec)
+          assert.equal(rec.id, user.id) // eslint-disable-line
+          assert.equal(rec.role, role.id)
+        })
+    })
+
+    it('should add record into array', () => {
+      return FootprintService
+        .createAssociation('User', user.id, 'roles', { name: 'temp' })
+        .then((rec) => {
+          assert(rec)
+          role = rec
+          return FootprintService
+            .find('User', user.id, { findOne: true })
+        })
+        .then((rec) => {
+          assert(rec)
+          assert.equal(rec.id, user.id)
+          assert(_.isArray(rec.roles))
+          assert.equal(rec.roles.length, 1)
+          assert.equal(rec.roles[0], role.id)
+        })
+    })
+  })
+
+  describe('#findAssociation', () => {
+
+    let user
+    let role
+
+    before(() => {
+      return FootprintService
+        .create('User', { email: 'test1@test.com', password: '123' })
+        .then((record) => {
+          assert(record)
+          assert(record._id) // eslint-disable-line
+
+          user = record
+          return FootprintService
+            .createAssociation('User', user._id, 'role', { name: 'test' }) // eslint-disable-line
+            .then((rec) => {
+              assert(rec)
+              assert(rec._id) // eslint-disable-line
+              role = rec
+            })
+        })
+    })
+
+    it('should find assotiation', () => {
+      return FootprintService
+        .findAssociation('User', user._id, 'role') // eslint-disable-line
+        .then((list) => {
+          assert(_.isArray(list))
+          assert.equal(list.length, 1)
+          assert.equal(list[0]._id.toString(), role._id.toString()) // eslint-disable-line
+        })
+    })
+  })
+
+  describe('#updateAssociation', () => {
+
+    let user
+    let role
+
+    before(() => {
+      return FootprintService
+        .create('User', { email: 'test2@test.com', password: '123' })
+        .then((record) => {
+          assert(record)
+          assert(record._id) // eslint-disable-line
+
+          user = record
+          return FootprintService
+            .createAssociation('User', user._id, 'role', { name: 'test' }) // eslint-disable-line
+            .then((rec) => {
+              assert(rec)
+              assert(rec._id) // eslint-disable-line
+              role = rec
+            })
+        })
+    })
+
+    it('should remove record', () => {
+      return FootprintService
+        .updateAssociation('User', user._id, 'role', { name: 'test' }, { name: 'temp' }) // eslint-disable-line
+        .then((rec) => {
+          assert(rec)
+          return FootprintService
+            .find('Role', role._id, { findOne: true }) // eslint-disable-line
+        })
+        .then((rec) => {
+          assert(rec)
+          assert.equal(rec.name, 'temp')
+        })
+    })
+  })
+
+  describe('#destroyAssociation', () => {
+
+    let user
+    let role
+
+    before(() => {
+      return FootprintService
+        .create('User', { email: 'test3@test.com', password: '123' })
+        .then((record) => {
+          assert(record)
+          assert(record._id) // eslint-disable-line
+
+          user = record
+          return FootprintService
+            .createAssociation('User', user._id, 'role', { name: 'test' }) // eslint-disable-line
+            .then((rec) => {
+              assert(rec)
+              assert(rec._id) // eslint-disable-line
+              role = rec
+            })
+        })
+    })
+
+    it('should remove record', () => {
+      return FootprintService
+        .destroyAssociation('User', user._id, 'role', { name: 'test' }) // eslint-disable-line
+        .then(() => FootprintService.find('Role', role._id, { findOne: true })) // eslint-disable-line
+        .then((rec) => {
+          assert(!rec)
+          return FootprintService
+            .find('User', user._id, { findOne: true }) // eslint-disable-line
+            .then((rec) => {
+              assert(rec)
+              assert(!rec.role)
+            })
         })
     })
   })

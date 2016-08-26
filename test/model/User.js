@@ -1,5 +1,6 @@
 'use strict'
 const Model = require('trails-model')
+const Schema = require('mongoose').Schema
 
 module.exports = class User extends Model {
 
@@ -19,6 +20,15 @@ module.exports = class User extends Model {
       active: {
         type: Boolean,
         default: false
+      },
+      role: {
+        type: Schema.Types.ObjectId,
+        ref: 'Role'
+      },
+
+      roles: {
+        type: [Schema.Types.ObjectId],
+        ref: 'Role'
       }
     }
   }
@@ -54,6 +64,7 @@ module.exports = class User extends Model {
         return next()
       }
       this.password += '***' //stupid check
+      return next()
     })
   }
 }
