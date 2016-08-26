@@ -287,7 +287,38 @@ module.exports = class FootprintService extends Service {
    * @return Promise
    */
   updateAssociation (parentModelName, parentId, childAttributeName, criteria, values, options) {
-    return Promise.reject('trailpack-mongoose does not have updateAssociation support yet. Sorry')
+    const Model = this._getModel(parentModelName)
+    if (!Model)
+      return Promise.reject(new Error('No model found'))
+
+    if (!parentId)
+      return Promise.reject(new Error('No parentId provided'))
+
+    const childModelName = this._getReferenceModelName(Model, childAttributeName)
+    if (!childModelName)
+      return Promise.reject(new Error('No such reference exist'))
+
+    options = options || {}
+    return this
+      .find(parentModelName, parentId, _.defaults({ findOne: true }, options))
+      .then((record) => {
+        if (!record)
+          return Promise.reject(new Error('No parent record found'))
+
+        if (!record[childAttributeName])
+          return Promise.resolve(null)
+
+        let ids
+        if (_.isArray(record[childAttributeName]))
+          ids = record[childAttributeName]
+        else
+          ids = [record[childAttributeName]]
+
+        criteria = criteria || {}
+        const query = _.extend({ _id: { '$in': ids } }, criteria)
+        return this
+          .update(childModelName, query, values)
+      })
   }
 
   /**

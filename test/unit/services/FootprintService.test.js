@@ -191,7 +191,7 @@ describe('FootprintService', () => {
     })
   })
 
-  xdescribe('#updateAssociation', () => {
+  describe('#updateAssociation', () => {
 
     it('should exist', () => {
       expect(FootprintService.updateAssociation).to.be.a('function')
