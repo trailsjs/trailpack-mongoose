@@ -101,12 +101,12 @@ module.exports = class FootprintService extends Service {
       }
       else {
         if (modelOptions.defaultLimit) {
-          query = query.limit(modelOptions.defaultLimit);
+          query = query.limit(modelOptions.defaultLimit)
         }
       }
 
       if (modelOptions.offset) {
-        query = query.skip(parseInt(modelOptions.offset));
+        query = query.skip(parseInt(modelOptions.offset))
       }
     }
 
