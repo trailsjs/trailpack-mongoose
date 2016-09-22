@@ -81,7 +81,7 @@ module.exports = class FootprintService extends Service {
   find (modelName, criteria, options) {
     const Model = this._getModel(modelName)
     const modelOptions = _.defaultsDeep({ }, options,
-      _.get(this.config, 'footprints.models.options'))
+      _.get(this.app.config, 'footprints.models.options'))
 
     if (!Model)
       return Promise.reject(new Error('No model found'))
@@ -96,8 +96,13 @@ module.exports = class FootprintService extends Service {
     }
     else {
       query = Model.find(criteria)
-      if (modelOptions.defaultLimit) {
-        query = query.limit(modelOptions.defaultLimit)
+      if (modelOptions.limit) {
+        query = query.limit(parseInt(modelOptions.limit))
+      }
+      else {
+        if (modelOptions.defaultLimit) {
+          query = query.limit(modelOptions.defaultLimit);
+        }
       }
     }
 
@@ -117,7 +122,7 @@ module.exports = class FootprintService extends Service {
   update (modelName, criteria, values, options) {
     const Model = this._getModel(modelName)
     const modelOptions = _.defaultsDeep({ }, options,
-      _.get(this.config, 'footprints.models.options'))
+      _.get(this.app.config, 'footprints.models.options'))
 
     if (!Model)
       return Promise.reject(new Error('No model found'))
