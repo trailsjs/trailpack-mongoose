@@ -118,6 +118,21 @@ module.exports = class FootprintService extends Service {
   }
 
   /**
+   * Count all models that satisfy a given criteria.
+   *
+   * @param modelName The name of the model
+   * @param criteria The criteria that filter the model resultset
+   * @return Promise
+   */
+  count (modelName, criteria) {
+    const Model = this.app.orm[modelName] || this.app.packs.mongoose.orm[modelName]
+    let query
+
+    query = Model.count(criteria)
+    return query.exec()
+  }
+
+  /**
    * Update an existing model, or models, matched by the given by criteria, with
    * the given values. If the criteria given is the primary key, then return
    * exactly the object that is updated; otherwise, return an array of objects.
