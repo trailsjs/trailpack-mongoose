@@ -77,6 +77,9 @@ module.exports = {
 ### Models
 
 ```js
+// Use default Schema from Mongoose. See http://mongoosejs.com/docs/schematypes.html
+const Schema = require('mongoose').Schema;
+
 module.exports = class User extends Model {
 
   static schema () {
