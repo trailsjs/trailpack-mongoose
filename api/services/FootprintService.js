@@ -110,6 +110,10 @@ module.exports = class FootprintService extends Service {
       }
     }
 
+    if (_.isString(modelOptions.populate)) {
+      query = query.populate(modelOptions.populate)
+    }
+
     return query.exec()
   }
 
@@ -146,10 +150,11 @@ module.exports = class FootprintService extends Service {
         .then(() => Model.find({ _id: { $in: ids }}).exec())
     }
     else {
+      if (!_.isString(modelOptions.populate)) modelOptions.populate = ''
       query = Model
         .update({ _id: criteria }, values)
         .exec()
-        .then(() => Model.findOne({ _id: criteria }).exec())
+        .then(() => Model.findOne({ _id: criteria }).populate(modelOptions.populate).exec())
     }
 
     return query
