@@ -150,7 +150,7 @@ module.exports = class FootprintService extends Service {
         .then(() => Model.find({ _id: { $in: ids }}).exec())
     }
     else {
-      if (!_.isString(modelOptions.populate)) modelOptions.populate = ""
+      if (!_.isString(modelOptions.populate)) modelOptions.populate = ''
       query = Model
         .update({ _id: criteria }, values)
         .exec()
