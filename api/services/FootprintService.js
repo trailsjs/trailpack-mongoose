@@ -110,7 +110,7 @@ module.exports = class FootprintService extends Service {
       }
 
       if (modelOptions.sort) {
-        query = query.sort(modelOptions.sort);
+        query = query.sort(modelOptions.sort)
       }
     }
 
