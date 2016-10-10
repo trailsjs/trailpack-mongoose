@@ -108,6 +108,10 @@ module.exports = class FootprintService extends Service {
       if (modelOptions.offset) {
         query = query.skip(parseInt(modelOptions.offset))
       }
+
+      if (modelOptions.sort) {
+        query = query.sort(modelOptions.sort)
+      }
     }
 
     if (_.isString(modelOptions.populate)) {
