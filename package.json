@@ -1,6 +1,6 @@
 {
   "name": "trailpack-mongoose",
-  "version": "0.4.4",
+  "version": "1.0.0",
   "description": "Mongoose Trailpack",
   "main": "index.js",
   "keywords": [
