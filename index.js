@@ -35,7 +35,12 @@ module.exports = class MongooseTrailpack extends DatastoreTrailpack {
     this.models = lib.Transformer.transformModels(this.app)
 
     this.orm = this.orm || {}
-    this.connections = _.mapValues(this.app.config.database.stores, (_store, storeName) => {
+    // Need to pick only mongoose stores
+    const stores = _.pickBy(this.app.config.database.stores, (_store, name) => {
+      return (_.isString(_store.uri) && _.startsWith(_store.uri, 'mongodb://'))
+    })
+    // iterating only through mongo stores
+    this.connections = _.mapValues(stores, (_store, storeName) => {
       const store = _.merge({ }, _store)
       if (!_.isString(store.uri))
         throw new Error('Store have to contain "uri" option')

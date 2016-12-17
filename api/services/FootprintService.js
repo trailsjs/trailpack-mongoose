@@ -129,11 +129,13 @@ module.exports = class FootprintService extends Service {
    * @return Promise
    */
   count (modelName, criteria) {
-    const Model = this.app.orm[modelName] || this.app.packs.mongoose.orm[modelName]
-    let query
+    const Model = this._getModel(modelName)
+    if (!Model)
+      return Promise.reject(new Error('No model found'))
 
-    query = Model.count(criteria)
-    return query.exec()
+    return Model
+      .count(criteria)
+      .exec()
   }
 
   /**
