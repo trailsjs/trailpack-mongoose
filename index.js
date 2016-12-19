@@ -36,9 +36,7 @@ module.exports = class MongooseTrailpack extends DatastoreTrailpack {
 
     this.orm = this.orm || {}
     // Need to pick only mongoose stores
-    const stores = _.pickBy(this.app.config.database.stores, (_store, name) => {
-      return (_.isString(_store.uri) && _.startsWith(_store.uri, 'mongodb://'))
-    })
+    const stores = lib.Transformer.pickStores(this.app.config.database.stores)
     // iterating only through mongo stores
     this.connections = _.mapValues(stores, (_store, storeName) => {
       const store = _.merge({ }, _store)

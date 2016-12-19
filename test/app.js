@@ -38,6 +38,10 @@ module.exports = _.defaultsDeep({
           options: {
 
           }
+        },
+        notMongoStore: {
+          uri: 'postgres://localhost:5432/tests',
+          options: {}
         }
       },
       models: {
