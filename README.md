@@ -78,15 +78,13 @@ module.exports = {
 
 ```js
 // Use default Schema from Mongoose. See http://mongoosejs.com/docs/schematypes.html
-const Schema = require('mongoose').Schema;
-
 module.exports = class User extends Model {
 
-  static schema () {
+  static schema (app, Mongoose) {
     return {
       username: String,
       childs: [{
-        type: Schema.ObjectId,
+        type: Mongoose.Schema.ObjectId,
         ref: 'UserSchema'
       }],
       email: {
@@ -105,7 +103,7 @@ module.exports = class User extends Model {
     }
   }
 
-  static config () {
+  static config (app, Mongoose) {
     return {
       // Collection name
       tableName: 'users',
