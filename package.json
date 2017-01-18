@@ -24,8 +24,7 @@
     "lodash": "^4.0.0",
     "mongoose": "^4.4.11",
     "trailpack": "2.1.0",
-    "trailpack-datastore": "2.0.0",
-    "trails-service": "2.0.0"
+    "trailpack-datastore": "2.0.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",
@@ -33,9 +32,7 @@
     "eslint-config-trails": "2.0.6",
     "mocha": "3.2.0",
     "smokesignals": "2.1.0",
-    "trailpack-core": "2.0.0",
-    "trails": "2.0.0",
-    "trails-model": "2.0.1"
+    "trails": "2.0.0"
   },
   "scripts": {
     "test": "eslint . && mocha"
