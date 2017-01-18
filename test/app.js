@@ -21,7 +21,6 @@ module.exports = _.defaultsDeep({
     },
     main: {
       packs: [
-        require('trailpack-core'),
         require('../') // trailpack-mongoose
       ]
     },
