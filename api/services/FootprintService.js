@@ -60,7 +60,7 @@ module.exports = class FootprintService extends Service {
    *
    * @param {String} modelName The name of the model to create
    * @param {Object} values The model's values
-   * @return Promise
+   * @return {Promise}
    */
   create (modelName, values, options) {
     const Model = this._getModel(modelName)
@@ -74,9 +74,9 @@ module.exports = class FootprintService extends Service {
    * Find all models that satisfy the given criteria. If a primary key is given,
    * the return value will be a single Object instead of an Array.
    *
-   * @param modelName The name of the model
-   * @param criteria The criteria that filter the model resultset
-   * @return Promise
+   * @param {String} modelName The name of the model
+   * @param {Array} [criteria] The criteria that filter the model resultset
+   * @return {Promise}
    */
   find (modelName, criteria, options) {
     const Model = this._getModel(modelName)
@@ -134,9 +134,9 @@ module.exports = class FootprintService extends Service {
   /**
    * Count all models that satisfy a given criteria.
    *
-   * @param modelName The name of the model
-   * @param criteria The criteria that filter the model resultset
-   * @return Promise
+   * @param {String} modelName The name of the model
+   * @param {Array} [criteria] The criteria that filter the model resultset
+   * @return {Promise}
    */
   count (modelName, criteria) {
     const Model = this._getModel(modelName)
@@ -153,10 +153,10 @@ module.exports = class FootprintService extends Service {
    * the given values. If the criteria given is the primary key, then return
    * exactly the object that is updated; otherwise, return an array of objects.
    *
-   * @param modelName The name of the model
-   * @param criteria The criteria that determine which models are to be updated
-   * @param [id] A optional model id; overrides "criteria" if both are specified.
-   * @return Promise
+   * @param {String} modelName The name of the model
+   * @param {Array} [criteria] The criteria that determine which models are to be updated
+   * @param {String|Mongoose.Schema.Types.ObjectId} [id] A optional model id; overrides "criteria" if both are specified.
+   * @return {Promise}
    */
   update (modelName, criteria, values, options) {
     const Model = this._getModel(modelName)
@@ -191,12 +191,12 @@ module.exports = class FootprintService extends Service {
     return query
   }
 
-  /*
+  /**
    * Destroy (delete) the model, or models, that match the given criteria.
    *
-   * @param modelName The name of the model
-   * @param criteria The criteria that determine which models are to be updated
-   * @return Promise
+   * @param {String} modelName The name of the model
+   * @param {Array} [criteria] The criteria that determine which models are to be updated
+   * @return {Promise}
    */
   destroy (modelName, criteria, options) {
     const Model = this._getModel(modelName)
@@ -277,11 +277,11 @@ module.exports = class FootprintService extends Service {
    * Find all models that satisfy the given criteria, and which is associated
    * with the given Parent Model.
    *
-   * @param parentModelName The name of the model's parent
-   * @param childAttributeName The name of the model to create
-   * @param parentId The id (required) of the parent model
-   * @param criteria The search criteria
-   * @return Promise
+   * @param {String} parentModelName The name of the model's parent
+   * @param {String} childAttributeName The name of the model to create
+   * @param {String|Mongoose.Schema.Types.ObjectId} parentId The id (required) of the parent model
+   * @param {Array} [criteria] The search criteria
+   * @return {Promise}
    */
   findAssociation (parentModelName, parentId, childAttributeName, criteria, options) {
     const Model = this._getModel(parentModelName)
@@ -325,11 +325,11 @@ module.exports = class FootprintService extends Service {
    * Update models by criteria, and which is associated with the given
    * Parent Model.
    *
-   * @param parentModelName The name of the model's parent
-   * @param parentId The id (required) of the parent model
-   * @param childAttributeName The name of the model to create
-   * @param criteria The search criteria
-   * @return Promise
+   * @param {String} parentModelName The name of the model's parent
+   * @param {String} parentId The id (required) of the parent model
+   * @param {String} childAttributeName The name of the model to create
+   * @param {Array} [criteria] The search criteria
+   * @return {Promise}
    */
   updateAssociation (parentModelName, parentId, childAttributeName, criteria, values, options) {
     const Model = this._getModel(parentModelName)
@@ -370,11 +370,11 @@ module.exports = class FootprintService extends Service {
    * Destroy models by criteria, and which is associated with the
    * given Parent Model.
    *
-   * @param parentModelName The name of the model's parent
-   * @param parentId The id (required) of the parent model
-   * @param childAttributeName The name of the model to create
-   * @param criteria The search criteria
-   * @return Promise
+   * @param {String} parentModelName The name of the model's parent
+   * @param {String} parentId The id (required) of the parent model
+   * @param {String} childAttributeName The name of the model to create
+   * @param {Array} [criteria] The search criteria
+   * @return {Promise}
    */
   destroyAssociation (parentModelName, parentId, childAttributeName, criteria, options) {
     const Model = this._getModel(parentModelName)

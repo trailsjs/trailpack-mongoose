@@ -20,6 +20,9 @@ module.exports = class MongooseTrailpack extends DatastoreTrailpack {
     }
   }
 
+  /**
+   * Create default configuration
+   */
   configure () {
     this.app.config.database.orm = 'mongoose'
 
@@ -31,6 +34,10 @@ module.exports = class MongooseTrailpack extends DatastoreTrailpack {
    */
   initialize () {
     super.initialize()
+
+    // Binding promise library
+    // We will use default one
+    mongoose.Promise = global.Promise
 
     this.models = lib.Transformer.transformModels(this.app)
 
@@ -45,13 +52,6 @@ module.exports = class MongooseTrailpack extends DatastoreTrailpack {
 
       if (!_.isObject(store.options))
         store.options = {}
-
-      // Setup promise library for mongoose
-      if (!store.options.promiseLibrary)
-        store.options.promiseLibrary = global.Promise
-
-      // Binding promise library
-      mongoose.Promise = store.options.promiseLibrary
 
       const connection = mongoose.createConnection(store.uri, store.options)
       const models = _.pickBy(this.models, { connection: storeName })
@@ -103,6 +103,9 @@ module.exports = class MongooseTrailpack extends DatastoreTrailpack {
     })
   }
 
+  /**
+   * Run migrations
+   */
   migrate () {
     const SchemaMigrationService = this.app.services.SchemaMigrationService
     const database = this.app.config.database
