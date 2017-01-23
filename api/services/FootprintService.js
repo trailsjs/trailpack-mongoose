@@ -115,7 +115,17 @@ module.exports = class FootprintService extends Service {
     }
 
     if (_.isString(modelOptions.populate)) {
-      query = query.populate(modelOptions.populate)
+      // Need to find associated model
+      const childModelName = this._getReferenceModelName(Model, modelOptions.populate)
+      if (!childModelName) {
+        return Promise.reject(new Error('No such reference exist: ' + modelOptions.populate))
+      }
+      const ChildModel = this._getModel(childModelName)
+      if (!ChildModel) {
+        return Promise.reject(new Error('No such model exist: ' + childModelName))
+      }
+
+      query = query.populate(modelOptions.populate, null, ChildModel)
     }
 
     return query.exec()
@@ -218,11 +228,11 @@ module.exports = class FootprintService extends Service {
   /**
    * Create a model, and associate it with its parent model.
    *
-   * @param parentModelName The name of the model's parent
-   * @param childAttributeName The name of the model to create
-   * @param parentId The id (required) of the parent model
-   * @param values The model's values
-   * @return Promise
+   * @param {String} parentModelName The name of the model's parent
+   * @param {String|ObjectId} parentId The id (required) of the parent model
+   * @param {String} childAttributeName The name of the model to create
+   * @param {Array|Object} values The model's values
+   * @return {Promise}
    */
   createAssociation (parentModelName, parentId, childAttributeName, values, options) {
     const Model = this._getModel(parentModelName)

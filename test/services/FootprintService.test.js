@@ -189,8 +189,9 @@ describe('api.services.FootprintService', () => {
           assert.equal(rec.name, 'test')
 
           role = rec
+
           return FootprintService
-            .find('User', user._id,{populate:"role"}) // eslint-disable-line
+            .find('User', user._id, { populate: 'role' }) // eslint-disable-line
         })
         .then((rec) => {
           assert(rec)
@@ -206,6 +207,7 @@ describe('api.services.FootprintService', () => {
         .then((rec) => {
           assert(rec)
           role = rec
+
           return FootprintService
             .find('User', user.id, { findOne: true, populate: 'roles' })
         })
@@ -213,9 +215,11 @@ describe('api.services.FootprintService', () => {
           assert(rec)
           assert.equal(rec.id, user.id)
           assert(_.isArray(rec.roles))
-          assert.equal(rec.roles.length, 1)
-          assert.equal(rec.roles[0].id, role.id)
-          assert.equal(rec.roles[0].name, role.name)
+          // We have 1 record added in prev test
+          // So need to look into last one
+          assert.equal(rec.roles.length, 2)
+          assert.equal(rec.roles[1].id, role.id)
+          assert.equal(rec.roles[1].name, role.name)
         })
     })
   })
