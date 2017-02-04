@@ -4,7 +4,7 @@ const Schema = require('mongoose').Schema
 
 module.exports = class Role extends Model {
 
-  static schema () {
+  static schema (app, Mongoose) {
 
     return {
       name: String,
@@ -15,7 +15,7 @@ module.exports = class Role extends Model {
     }
   }
 
-  static config () {
+  static config (app, Mongoose) {
     return {
       store: 'storeoverride',
       schema: {

@@ -141,23 +141,24 @@ module.exports = class User extends Model {
 
           return user
         }
-      }
+      },
+      
+      /**
+        * After Trails.js will create model Schema you could add anything you want here
+        * @param  {mongoose.Schema} schema mongoose new Schema object
+      */
+      onSchema (app, schema) {
+          // virtuals
+          schema.virtual('name.full').get(function () {
+            return this.name.first + ' ' + this.name.last
+          })
+          // lifecircle events
+          schema.pre('save', function (next) {
+            // performing actions
+            next()
+          })
+        }
     }
-  }
-  /**
-   * After Trails.js will create model Schema you could add anything you want here
-   * @param  {mongoose.Schema} schema mongoose new Schema object
-   */
-  static onSchema (schema) {
-    // virtuals
-    schema.virtual('name.full').get(function () {
-      return this.name.first + ' ' + this.name.last
-    })
-    // lifecircle events
-    schema.pre('save', function (next) {
-      // performing actions
-      next()
-    })
   }
 }```
 

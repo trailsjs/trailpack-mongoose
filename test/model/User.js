@@ -4,7 +4,7 @@ const Schema = require('mongoose').Schema
 
 module.exports = class User extends Model {
 
-  static schema () {
+  static schema(app, Mongoose) {
 
     return {
       name: String,
@@ -33,7 +33,7 @@ module.exports = class User extends Model {
     }
   }
 
-  static config () {
+  static config(app, Mongoose) {
     return {
       schema: {
         timestamps: true,
@@ -50,21 +50,28 @@ module.exports = class User extends Model {
         makeActive () {
           this.active = true
         }
+      },
+      onSchema: (app, schema) => {
+        schema.virtual('test').get(function() {
+          return '|' + this.name + '|'
+        })
+
+        schema.pre('save', function(next) {
+          if (!this.isModified('password')) {
+            return next()
+          }
+          this.password += '***' //stupid check
+          return next()
+        })
+        schema.pre('save', function(next) {
+          if (!this.isModified('name')) {
+            return next()
+          }
+          this.name = this.name.toLowerCase() //stupid transformation
+          return next()
+        })
       }
     }
   }
 
-  static onSchema (schema) {
-    schema.virtual('test').get(function () {
-      return '|' + this.name + '|'
-    })
-
-    schema.pre('save', function (next) {
-      if (!this.isModified('password')) {
-        return next()
-      }
-      this.password += '***' //stupid check
-      return next()
-    })
-  }
 }
