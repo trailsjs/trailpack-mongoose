@@ -35,7 +35,8 @@
     "trails": "2.0.0"
   },
   "scripts": {
-    "test": "eslint --fix . && mocha"
+    "test": "eslint --fix . && NODE_ENV=test mocha",
+    "mocha": "NODE_ENV=test mocha"
   },
   "engines": {
     "node": ">= 4.0.0"

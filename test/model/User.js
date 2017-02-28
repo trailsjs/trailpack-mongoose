@@ -29,7 +29,12 @@ module.exports = class User extends Model {
       roles: {
         type: [Schema.Types.ObjectId],
         ref: 'Role'
-      }
+      },
+
+      superRoles: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Role'
+      }]
     }
   }
 

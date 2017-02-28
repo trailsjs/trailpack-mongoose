@@ -180,6 +180,24 @@ describe('api.services.FootprintService', () => {
         })
     })
 
+    it('should add record into array for superRoles', () => {
+      return FootprintService
+        .createAssociation('User', user.id, 'superRoles', { name: 'temp' })
+        .then((rec) => {
+          assert(rec)
+          role = rec
+          return FootprintService
+            .find('User', user.id, { findOne: true })
+        })
+        .then((rec) => {
+          assert(rec)
+          assert.equal(rec.id, user.id)
+          assert(_.isArray(rec.superRoles))
+          assert.equal(rec.superRoles.length, 1)
+          assert.equal(rec.superRoles[0], role.id)
+        })
+    })
+
     it('should create an assotiation record and populate it', () => {
       return FootprintService
         .createAssociation('User', user._id, 'role', { name: 'test' }) // eslint-disable-line

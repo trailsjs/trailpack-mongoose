@@ -48,10 +48,14 @@ module.exports = class FootprintService extends Service {
     const ref = this._getReferenceDefinition(model, reference)
     if (!ref)
       return false
-    if (!_.has(ref, 'options.ref') || !_.isString(ref.options.ref))
-      return false
 
-    return ref.options.ref
+    if (_.has(ref, 'options.ref') && _.isString(ref.options.ref))
+      return ref.options.ref
+
+    if (_.has(ref, 'caster.options.ref') && _.isString(ref.caster.options.ref))
+      return ref.caster.options.ref
+
+    return false
   }
 
   /**
