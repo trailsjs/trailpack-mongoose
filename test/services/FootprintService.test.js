@@ -179,6 +179,67 @@ describe('api.services.FootprintService', () => {
           assert.equal(rec.roles[0], role.id)
         })
     })
+
+    it('should add record into array for superRoles', () => {
+      return FootprintService
+        .createAssociation('User', user.id, 'superRoles', { name: 'temp' })
+        .then((rec) => {
+          assert(rec)
+          role = rec
+          return FootprintService
+            .find('User', user.id, { findOne: true })
+        })
+        .then((rec) => {
+          assert(rec)
+          assert.equal(rec.id, user.id)
+          assert(_.isArray(rec.superRoles))
+          assert.equal(rec.superRoles.length, 1)
+          assert.equal(rec.superRoles[0], role.id)
+        })
+    })
+
+    it('should create an assotiation record and populate it', () => {
+      return FootprintService
+        .createAssociation('User', user._id, 'role', { name: 'test' }) // eslint-disable-line
+        .then((rec) => {
+          assert(rec)
+          assert(rec._id) // eslint-disable-line
+          assert.equal(rec.name, 'test')
+
+          role = rec
+
+          return FootprintService
+            .find('User', user._id, { populate: 'role' }) // eslint-disable-line
+        })
+        .then((rec) => {
+          assert(rec)
+          assert.equal(rec.id, user.id) // eslint-disable-line
+          assert.equal(rec.role.id, role.id)
+          assert.equal(rec.role.name, role.name)
+        })
+    })
+
+    it('should add record into array and populate it', () => {
+      return FootprintService
+        .createAssociation('User', user.id, 'roles', { name: 'temp' })
+        .then((rec) => {
+          assert(rec)
+          role = rec
+
+          return FootprintService
+            .find('User', user.id, { findOne: true, populate: 'roles' })
+        })
+        .then((rec) => {
+          assert(rec)
+          assert.equal(rec.id, user.id)
+          assert(_.isArray(rec.roles))
+          // We have 1 record added in prev test
+          // So need to look into last one
+          assert.equal(rec.roles.length, 2)
+          assert.equal(rec.roles[1].id, role.id)
+          assert.equal(rec.roles[1].name, role.name)
+        })
+    })
   })
 
   describe('#findAssociation', () => {

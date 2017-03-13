@@ -3,7 +3,9 @@ const assert = require('assert')
 const lib = require('../../lib')
 
 describe('lib.Transformer', () => {
+
   describe('#transformModels', () => {
+
     it('should augment the models with identity and globalId', () => {
       const models = lib.Transformer.transformModels(global.app)
 
@@ -25,11 +27,21 @@ describe('lib.Transformer', () => {
       assert.equal(typeof models.Role.methods, 'object')
       assert.equal(typeof models.Role.onSchema, 'function')
     })
+
     it('should correctly set the connection', () => {
       const models = lib.Transformer.transformModels(global.app)
 
       assert.equal(models.User.connection, 'teststore')
       assert.equal(models.Role.connection, 'storeoverride')
+    })
+  })
+
+  describe('#pickStores', () => {
+
+    it('should pick only stores for mongo', () => {
+      const stores = lib.Transformer.pickStores(global.app.config.database.stores)
+      assert.equal(typeof stores, 'object')
+      assert.deepEqual(Object.keys(stores), [ 'teststore', 'storeoverride' ])
     })
   })
 

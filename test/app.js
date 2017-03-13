@@ -21,7 +21,6 @@ module.exports = _.defaultsDeep({
     },
     main: {
       packs: [
-        require('trailpack-core'),
         require('../') // trailpack-mongoose
       ]
     },
@@ -38,6 +37,10 @@ module.exports = _.defaultsDeep({
           options: {
 
           }
+        },
+        notMongoStore: {
+          uri: 'postgres://localhost:5432/tests',
+          options: {}
         }
       },
       models: {

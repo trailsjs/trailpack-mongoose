@@ -20,6 +20,9 @@ module.exports = class MongooseTrailpack extends DatastoreTrailpack {
     }
   }
 
+  /**
+   * Create default configuration
+   */
   configure () {
     this.app.config.database.orm = 'mongoose'
 
@@ -32,23 +35,23 @@ module.exports = class MongooseTrailpack extends DatastoreTrailpack {
   initialize () {
     super.initialize()
 
+    // Binding promise library
+    // We will use default one
+    mongoose.Promise = global.Promise
+
     this.models = lib.Transformer.transformModels(this.app)
 
     this.orm = this.orm || {}
-    this.connections = _.mapValues(this.app.config.database.stores, (_store, storeName) => {
+    // Need to pick only mongoose stores
+    const stores = lib.Transformer.pickStores(this.app.config.database.stores)
+    // iterating only through mongo stores
+    this.connections = _.mapValues(stores, (_store, storeName) => {
       const store = _.merge({ }, _store)
       if (!_.isString(store.uri))
         throw new Error('Store have to contain "uri" option')
 
       if (!_.isObject(store.options))
         store.options = {}
-
-      // Setup promise library for mongoose
-      if (!store.options.promiseLibrary)
-        store.options.promiseLibrary = global.Promise
-
-      // Binding promise library
-      mongoose.Promise = store.options.promiseLibrary
 
       const connection = mongoose.createConnection(store.uri, store.options)
       const models = _.pickBy(this.models, { connection: storeName })
@@ -59,7 +62,7 @@ module.exports = class MongooseTrailpack extends DatastoreTrailpack {
         schema.statics = model.statics
         schema.methods = model.methods
 
-        model.onSchema(schema)
+        model.onSchema(this.app, schema)
 
         //create model
         this.orm[model.globalId] = connection.model(model.globalId, schema, model.tableName)
@@ -100,6 +103,9 @@ module.exports = class MongooseTrailpack extends DatastoreTrailpack {
     })
   }
 
+  /**
+   * Run migrations
+   */
   migrate () {
     const SchemaMigrationService = this.app.services.SchemaMigrationService
     const database = this.app.config.database
