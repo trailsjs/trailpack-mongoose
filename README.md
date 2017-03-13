@@ -24,7 +24,7 @@ generate Footprints for routes.
 
 ## Usage
 
-### Configure
+### Include trailpack in app.
 
 ```js
 // config/main.js
@@ -36,7 +36,7 @@ module.exports = {
 }
 ```
 
-### Configure stores
+### Configure stores.
 
 ```js
 // config/database.js
@@ -75,6 +75,31 @@ module.exports = {
 ```
 
 ### Models
+
+#### Options
+
+##### Model::Schema
+
+See [Mongoose Documentation for Schemas](http://mongoosejs.com/docs/guide.html).
+
+##### Model::Config
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| tableName | String | `modelName.toLowerCase()` | Name of collection to use with this model. For example: MyModel.js defaults to collection named `mymodel`
+| store | String | `app.config.database.models.defaultStore` | Datastore to use for this model; specify the name of one of the stores in `app.config.database.stores`.
+| migrate | String | | Migrate *must* be set to one of `[ 'none', 'drop', 'create' ]`
+| schema | Object | `{}` | [Schema Options](http://mongoosejs.com/docs/guide.html#options) to pass into Mongoose's Schema constructor.
+| statics | Object | `{}` | [Static methods](http://mongoosejs.com/docs/guide.html#statics) to add to the Model.
+| methods | Object | `{}` | [Instance methods](http://mongoosejs.com/docs/guide.html#methods) to add to this model's documents.
+
+##### Model::onSchema
+
+Funcion which is useful to for adding schema [middleware](http://mongoosejs.com/docs/middleware.html) or [virtuals](http://mongoosejs.com/docs/guide.html#virtuals).
+
+Defaults to `undefined`.
+
+#### Example
 
 ```js
 // Use default Schema from Mongoose. See http://mongoosejs.com/docs/schematypes.html
@@ -161,7 +186,23 @@ module.exports = class User extends Model {
         }
     }
   }
-}```
+  /**
+   * After Trails.js will create model Schema you could add anything you want here
+   * @param  {mongoose.Schema} schema mongoose new Schema object
+   */
+  static onSchema (schema) {
+    // virtuals
+    schema.virtual('name.full').get(function () {
+      return this.name.first + ' ' + this.name.last
+    })
+    // lifecircle events
+    schema.pre('save', function (next) {
+      // performing actions
+      next()
+    })
+  }
+}
+```
 
 ### Query
 
