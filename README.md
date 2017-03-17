@@ -92,12 +92,7 @@ See [Mongoose Documentation for Schemas](http://mongoosejs.com/docs/guide.html).
 | schema | Object | `{}` | [Schema Options](http://mongoosejs.com/docs/guide.html#options) to pass into Mongoose's Schema constructor.
 | statics | Object | `{}` | [Static methods](http://mongoosejs.com/docs/guide.html#statics) to add to the Model.
 | methods | Object | `{}` | [Instance methods](http://mongoosejs.com/docs/guide.html#methods) to add to this model's documents.
-
-##### Model::onSchema
-
-Funcion which is useful to for adding schema [middleware](http://mongoosejs.com/docs/middleware.html) or [virtuals](http://mongoosejs.com/docs/guide.html#virtuals).
-
-Defaults to `undefined`.
+| onSchema | Function | undefined | Funcion which is useful to for adding schema middleware, virtuals, or indexes.
 
 #### Example
 
@@ -183,23 +178,23 @@ module.exports = class User extends Model {
             // performing actions
             next()
           })
+          
+          // text indexes
+          schema.index(
+            { 
+              username: 'text',
+              email: 'text'
+            },
+            { 
+              weights : {
+                username : 10,
+                email: 5
+              },
+              name: "usersIndex"
+            }
+          )
         }
     }
-  }
-  /**
-   * After Trails.js will create model Schema you could add anything you want here
-   * @param  {mongoose.Schema} schema mongoose new Schema object
-   */
-  static onSchema (schema) {
-    // virtuals
-    schema.virtual('name.full').get(function () {
-      return this.name.first + ' ' + this.name.last
-    })
-    // lifecircle events
-    schema.pre('save', function (next) {
-      // performing actions
-      next()
-    })
   }
 }
 ```
