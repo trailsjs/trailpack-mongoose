@@ -304,7 +304,7 @@ module.exports = class FootprintService extends Service {
 
     options = options || {}
     return this
-      .find('User', parentId, options)
+      .find(parentModelName, parentId, options)
       .then((record) => {
         if (!record)
           return Promise.reject(new Error('No parent record found'))
