@@ -1,7 +1,7 @@
 'use strict'
 
 const _ = require('lodash')
-const Service = require('trails/service')
+const Service = require('trails/lib/Service')
 
 /**
  * Trails Service that maps abstract ORM methods to their respective Waterine

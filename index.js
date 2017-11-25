@@ -2,7 +2,7 @@
 
 const _ = require('lodash')
 const mongoose = require('mongoose')
-const DatastoreTrailpack = require('trailpack-datastore')
+const DatastoreTrailpack = require('trailpack/datastore')
 const lib = require('./lib')
 
 /**
@@ -14,8 +14,8 @@ module.exports = class MongooseTrailpack extends DatastoreTrailpack {
   /**
    * Ensure that this trailpack supports the configured migration
    */
-  validate () {
-    if (!_.includes([ 'none', 'drop', 'create' ], this.app.config.database.models.migrate)) {
+  validate() {
+    if (!_.includes(['none', 'drop', 'create'], this.app.config.get('database.models.migrate'))) {
       throw new Error('Migrate must be configured to either "create" or "drop"')
     }
   }
@@ -23,8 +23,8 @@ module.exports = class MongooseTrailpack extends DatastoreTrailpack {
   /**
    * Create default configuration
    */
-  configure () {
-    this.app.config.database.orm = 'mongoose'
+  configure() {
+    this.app.config.set('database.orm', 'mongoose')
 
     this.mongoose = mongoose
   }
@@ -32,7 +32,7 @@ module.exports = class MongooseTrailpack extends DatastoreTrailpack {
   /**
    * Initialize mongoose connections, and perform migrations.
    */
-  initialize () {
+  async initialize() {
     super.initialize()
 
     // Binding promise library
@@ -43,10 +43,10 @@ module.exports = class MongooseTrailpack extends DatastoreTrailpack {
 
     this.orm = this.orm || {}
     // Need to pick only mongoose stores
-    const stores = lib.Transformer.pickStores(this.app.config.database.stores)
+    const stores = lib.Transformer.pickStores(this.app.config.get('database.stores'))
     // iterating only through mongo stores
     this.connections = _.mapValues(stores, (_store, storeName) => {
-      const store = _.merge({ }, _store)
+      const store = _.merge({}, _store)
       if (!_.isString(store.uri))
         throw new Error('Store have to contain "uri" option')
 
@@ -66,7 +66,7 @@ module.exports = class MongooseTrailpack extends DatastoreTrailpack {
 
         //create model
         this.orm[model.globalId] = connection.model(model.globalId, schema, model.tableName)
-        this.packs.mongoose.orm[model.identity] = this.orm[model.globalId]
+        this.app.packs.mongoose.orm[model.identity] = this.orm[model.globalId]
       })
 
       return connection
@@ -80,7 +80,7 @@ module.exports = class MongooseTrailpack extends DatastoreTrailpack {
   /**
    * Close all database connections
    */
-  unload () {
+  unload() {
     return Promise.all(
       _.map(this.connections, connection => {
         return new Promise((resolve, reject) => {
@@ -95,7 +95,7 @@ module.exports = class MongooseTrailpack extends DatastoreTrailpack {
     )
   }
 
-  constructor (app) {
+  constructor(app) {
     super(app, {
       config: require('./config'),
       api: require('./api'),
@@ -106,15 +106,15 @@ module.exports = class MongooseTrailpack extends DatastoreTrailpack {
   /**
    * Run migrations
    */
-  migrate () {
+  async migrate() {
     const SchemaMigrationService = this.app.services.SchemaMigrationService
-    const database = this.app.config.database
+    const migrate = this.app.config.get('database.models.migrate')
 
-    if (database.models.migrate == 'none') return
+    if (migrate === 'none') return
 
     return Promise.all(
       _.map(this.connections, connection => {
-        if (database.models.migrate == 'drop') {
+        if (migrate === 'drop') {
           return SchemaMigrationService.drop(connection)
         }
       }))

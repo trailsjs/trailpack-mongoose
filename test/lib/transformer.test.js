@@ -39,7 +39,7 @@ describe('lib.Transformer', () => {
   describe('#pickStores', () => {
 
     it('should pick only stores for mongo', () => {
-      const stores = lib.Transformer.pickStores(global.app.config.database.stores)
+      const stores = lib.Transformer.pickStores(global.app.config.get('database.stores'))
       assert.equal(typeof stores, 'object')
       assert.deepEqual(Object.keys(stores), [ 'teststore', 'storeoverride' ])
     })

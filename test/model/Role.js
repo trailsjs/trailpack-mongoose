@@ -1,5 +1,5 @@
 'use strict'
-const Model = require('trails/model')
+const Model = require('trails/lib/Model')
 const Schema = require('mongoose').Schema
 
 module.exports = class Role extends Model {

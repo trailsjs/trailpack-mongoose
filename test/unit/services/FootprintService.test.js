@@ -13,7 +13,7 @@ describe('FootprintService', () => {
   })
 
   it('should exist', () => {
-    expect(global.app.api.services['FootprintService']).to.be.defined
+    expect(global.app.api.services['FootprintService']).exist
     expect(global.app.services.FootprintService).to.be.an('object')
   })
 

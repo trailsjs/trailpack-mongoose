@@ -1,6 +1,6 @@
 {
   "name": "trailpack-mongoose",
-  "version": "2.1.4",
+  "version": "3.0.0",
   "description": "Mongoose Trailpack",
   "main": "index.js",
   "keywords": [
@@ -21,25 +21,24 @@
     }
   ],
   "dependencies": {
-    "lodash": "^4.0.0",
-    "mongoose": "^4.7.7",
-    "trailpack": "2.1.0",
-    "trailpack-datastore": "2.0.0"
+    "lodash": "^4.17.5",
+    "mongoose": "^5.0.10",
+    "trailpack": "^3.0.0"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
-    "eslint": "3.13.1",
-    "eslint-config-trails": "2.0.6",
-    "mocha": "3.2.0",
-    "smokesignals": "2.1.0",
-    "trails": "2.0.0"
+    "chai": "^4.1.2",
+    "eslint": "^4.19.0",
+    "eslint-config-trails": "^3.1.0",
+    "mocha": "^5.0.4",
+    "smokesignals": "^3.0.4",
+    "trails": "^3.2.1"
   },
   "scripts": {
     "test": "eslint --fix . && NODE_ENV=test mocha",
     "mocha": "NODE_ENV=test mocha"
   },
   "engines": {
-    "node": ">= 4.0.0"
+    "node": ">= 7.0.0"
   },
   "eslintConfig": {
     "extends": "trails"
